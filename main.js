@@ -84,9 +84,19 @@ function setupGui() {
     gui.add(effectController, "newAxes").name("Mostrar ejes");
 }
 
+function factorial(n){
+    if(n == 0){
+        return 1;
+    } else{
+        alert(n * (factorial(n - 1)));
+        return (n * (factorial(n - 1)));
+    } 
+}
+
 function onLoad() {
     init();
     setupGui();
     addToDOM();
     animate();
+    //factorial(3);
 }
