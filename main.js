@@ -88,9 +88,28 @@ function factorial(n){
     if(n == 0){
         return 1;
     } else{
-        alert(n * (factorial(n - 1)));
         return (n * (factorial(n - 1)));
     } 
+}
+
+function combinatoria(n, p){
+    if(p > n){
+        return factorial(n) / (factorial(p) * (factorial(n - p))); 
+    }
+}
+
+function polinomioBernstein(n, x , i){
+    return combinatoria(n, i)* Math.pow(x, i) * Math.pow(1 - x. n - i);
+}
+
+function superficieBezier(m, n){
+    var resultado = 0;
+
+    for(var i =  0; i <= m; i++){
+        for(var j = 0; j <= n; j++){
+            //resultado = polinomioBernstein();
+        }
+    }
 }
 
 function onLoad() {
@@ -98,5 +117,5 @@ function onLoad() {
     setupGui();
     addToDOM();
     animate();
-    //factorial(3);
 }
+
