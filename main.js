@@ -118,9 +118,9 @@ function superficieBezier(m, n) {
             z = 0;
             for (var i = 0; i < n.length; i++) {
                 for (var j = 0; j < m.length; j++) {
-                    x += polinomioBernstein(n.length, i, u) * polinomioBernstein(m.length, j, v) * m[j][0] * n[i][0];
-                    y += polinomioBernstein(n.length, i, u) * polinomioBernstein(m.length, j, v) * m[j][1] * n[i][1];
-                    z += polinomioBernstein(n.length, i, u) * polinomioBernstein(m.length, j, v) * m[j][2] * n[i][2];
+                    x += polinomioBernstein(n.length, i, u) * polinomioBernstein(m.length, j, v) * m[j].x * n[i].x;
+                    y += polinomioBernstein(n.length, i, u) * polinomioBernstein(m.length, j, v) * m[j].y * n[i].y;
+                    z += polinomioBernstein(n.length, i, u) * polinomioBernstein(m.length, j, v) * m[j].z * n[i].z;
                 }
             }
             puntos.push(new THREE.Vector4(x, y, z, 1));
@@ -131,7 +131,7 @@ function superficieBezier(m, n) {
 }
 
 function esfera(x, y, z) {
-    var geometry = new THREE.SphereGeometry(5, 5, 3);
+    var geometry = new THREE.SphereGeometry(2, 2, 1);
     var material = new THREE.MeshBasicMaterial({ color: 0x0FFFF0 });
     var cube = new THREE.Mesh(geometry, material);
     cube.position.x = x;
@@ -146,13 +146,13 @@ function onLoad() {
     addToDOM();
     animate();
 
-    superficieBezier([new THREE.Vector4(-1 / 5 * 100, -2 / 5 * 100, 2 / 5 * 100, 1.0),
-        new THREE.Vector4(-2 / 5 * 100, -3 / 5 * 100, 3 / 5 * 10, 1.0),
-        new THREE.Vector4(-4 / 5 * 100, -4 / 5 * 100, 1 / 5 * 100, 1.0)], [new THREE.Vector4(4 / 5* 100, -1 / 5 * 100, 3 / 5 * 100, 1.0),
-        new THREE.Vector4(3 / 5 * 100, -3 / 5 * 100, 2 / 5 * 100, 1.0),
-        new THREE.Vector4(2 / 5 * 100, -1 * 100, 4 / 5* 100, 1.0)]);
+    superficieBezier([new THREE.Vector4(-1 / 5 * 10, -2 / 5 * 10, 2 / 5 * 10, 1.0),
+        new THREE.Vector4(-2 / 5 * 10, -3 / 5 * 10, 3 / 5 * 10, 1.0),
+        new THREE.Vector4(-4 / 5 * 10, -4 / 5 * 10, 1 / 5 * 10, 1.0)], [new THREE.Vector4(4 / 5* 10, -1 / 5 * 10, 3 / 5 * 10, 1.0),
+        new THREE.Vector4(3 / 5 * 10, -3 / 5 * 10, 2 / 5 * 10, 1.0),
+        new THREE.Vector4(2 / 5 * 10, -1 * 10, 4 / 5* 10, 1.0)]);
 
     for(var i = 0; i < puntos.length; i++){
-        console.log(puntos[i]);
+        esfera(puntos[i].x, puntos[i].y, puntos[i].z);
     }
 }
