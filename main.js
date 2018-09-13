@@ -3,9 +3,10 @@ let cameraControls, effectController;
 let clock = new THREE.Clock();
 let axes = true;
 
+var puntos = [];
+var colores = [];
+
 function init() {
-    //let canvasWidth = 846;
-    //let canvasHeight = 494;
     // For grading the window is fixed in size; here's general code:
     let canvasWidth = window.innerWidth;
     let canvasHeight = window.innerHeight;
@@ -77,39 +78,66 @@ function render() {
 function setupGui() {
     effectController = {
         newAxes: axes,
-        dummy: function() {}
+        dummy: function () { }
+
     };
 
     let gui = new dat.GUI();
     gui.add(effectController, "newAxes").name("Mostrar ejes");
 }
 
-function factorial(n){
-    if(n == 0){
+function factorial(n) {
+    if (n == 0) {
         return 1;
-    } else{
+    } else {
         return (n * (factorial(n - 1)));
-    } 
-}
-
-function combinatoria(n, p){
-    if(p > n){
-        return factorial(n) / (factorial(p) * (factorial(n - p))); 
     }
 }
 
-function polinomioBernstein(n, x , i){
-    return combinatoria(n, i)* Math.pow(x, i) * Math.pow(1 - x. n - i);
+function combinatoria(n, p) {
+    if (p >= 0 && p <= n) {
+        return factorial(n) / (factorial(p) * (factorial(n - 1)));
+    } else{
+        return 0;
+    }
 }
 
-function superficieBezier(m, n){
-    var resultado = 0;
+function polinomioBernstein(n, i, t) {
+    return combinatoria(n, i) * Math.pow(t, i) * Math.pow((1 - t), (n - i));
+}
 
-    for(var i =  0; i <= m; i++){
-        for(var j = 0; j <= n; j++){
-            //resultado = polinomioBernstein();
+function superficieBezier(m, n) {
+    var x, y, z;
+
+    console.log(m,n);
+
+    for (var u = 0; u < 0.5; u += 0.05) {
+        for (var v = 0; v < 0.5; v += 0.05) {
+            x = 0;
+            y = 0;
+            z = 0;
+            for (var i = 0; i < n.length; i++) {
+                for (var j = 0; j < m.length; j++) {
+                    x += polinomioBernstein(n.length, i, u) * polinomioBernstein(m.length, j, v) * m[j][0] * n[i][0];
+                    y += polinomioBernstein(n.length, i, u) * polinomioBernstein(m.length, j, v) * m[j][1] * n[i][1];
+                    z += polinomioBernstein(n.length, i, u) * polinomioBernstein(m.length, j, v) * m[j][2] * n[i][2];
+                }
+            }
+            puntos.push(new THREE.Vector4(x, y, z, 1));
+            //colores.push(1.0, 1.0, 1.0, 1.0);
         }
     }
+
+}
+
+function esfera(x, y, z) {
+    var geometry = new THREE.SphereGeometry(5, 5, 3);
+    var material = new THREE.MeshBasicMaterial({ color: 0x0FFFF0 });
+    var cube = new THREE.Mesh(geometry, material);
+    cube.position.x = x;
+    cube.position.y = y;
+    cube.position.z = z;
+    scene.add(cube);
 }
 
 function onLoad() {
@@ -117,5 +145,14 @@ function onLoad() {
     setupGui();
     addToDOM();
     animate();
-}
 
+    superficieBezier([new THREE.Vector4(-1 / 5 * 100, -2 / 5 * 100, 2 / 5 * 100, 1.0),
+        new THREE.Vector4(-2 / 5 * 100, -3 / 5 * 100, 3 / 5 * 10, 1.0),
+        new THREE.Vector4(-4 / 5 * 100, -4 / 5 * 100, 1 / 5 * 100, 1.0)], [new THREE.Vector4(4 / 5* 100, -1 / 5 * 100, 3 / 5 * 100, 1.0),
+        new THREE.Vector4(3 / 5 * 100, -3 / 5 * 100, 2 / 5 * 100, 1.0),
+        new THREE.Vector4(2 / 5 * 100, -1 * 100, 4 / 5* 100, 1.0)]);
+
+    for(var i = 0; i < puntos.length; i++){
+        console.log(puntos[i]);
+    }
+}
